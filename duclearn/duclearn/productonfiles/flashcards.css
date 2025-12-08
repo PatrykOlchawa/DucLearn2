@@ -1,0 +1,40 @@
+.flashcard-container {
+  perspective: 1000px;
+  width: 250px;
+  height: 150px;
+  margin: 30px auto;
+}
+
+.flashcard {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+  cursor: pointer;
+}
+
+.flashcard-container:hover .flashcard {
+  transform: rotateY(180deg);
+}
+
+.flashcard .front,
+.flashcard .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #CCAE37;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.flashcard .back {
+  background-color: #333333;
+  transform: rotateY(180deg);
+}

@@ -1,0 +1,16 @@
+{% extends "test_details.html" %}
+
+{% block title %}
+Solve Test
+{% endblock %}
+
+{% block content %}
+<h1>Test {{mytest.title}}
+<p>Question {{question_id}}/{{num_questions}}</p>
+<p>{{question.text}}</p>
+<form>
+	<input type="text" id="answer" placeholder="...">
+	<input type="submit" value="Save">
+	<a href="{% url 'solve_test' mytest.id question_id|add:1 %}"><button>NEXT</button>
+</form>
+{% endblock %}

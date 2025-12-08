@@ -1,0 +1,104 @@
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.template import loader
+from django.utils.html import strip_tags
+from .models import Test, Question
+from .forms import TestForm, QuestionForm
+# Create your views here.
+def tests(request):
+    alltests = Test.objects.all().values()
+    template = loader.get_template('all_tests.html')
+    context = {
+        'alltests': alltests,
+        }
+    return HttpResponse(template.render(context, request))
+def test_details(request, id):
+    mytest = Test.objects.get(id=id)
+    questions = mytest.question_list().values()
+    template = loader.get_template('test_details.html')
+    context = {
+            'mytest' : mytest,
+            'questions' : questions,
+            }
+    return HttpResponse(template.render(context, request))
+def solve_test(request, id, questionId):
+    mytest = Test.objects.get(id=id)
+    questions = mytest.question_list()
+    #if(questionId == -1):
+    #    qustion = questions.get.
+   # print(f"{len(questions)}")
+    
+    #if index > len(questions): 
+    #    return redirect('test_finished', id=id)
+    if not any(q.id == questionId for q in questions):
+        return redirect('test_finished', id=id)
+
+    question = questions.get(id=questionId)
+    if 'answers' not in request.session:
+        request.session['answers'] = {}
+
+    if request.method == 'POST':
+        selected_answer = request.POST.get('answer')
+        answers = request.session['answers']
+        answers[str(questionId)] = selected_answer  # use str keys for JSON serializability
+        request.session['answers'] = answers
+    template = loader.get_template('solve_test.html')
+    context = {
+            'mytest' : mytest,
+            'question' : question,
+            'question_id' : questionId,
+            'num_questions' : len(questions), 
+
+            }
+    return HttpResponse(template.render(context, request))
+def start_test(request, id):
+    request.session['answers'] = {} 
+    mytest = Test.objects.get(id=id)
+    firstId = mytest.question_list().first().id
+    if not firstId:
+        return HttpResponse("No questions in this test.")
+    template = loader.get_template('solve_test_initial.html')
+    context = {
+            'mytest' : mytest,
+            'firstId' : firstId
+            }
+    return HttpResponse(template.render(context, request))
+def test_finished(request, id):
+    test = Test.objects.get(id=id)
+    questions = list(test.question_list())
+    answers = request.session.get('answers', {})
+    score = 0
+    for index, question in enumerate(questions):
+        user_answer = answers.get(str(index+1))
+        if user_answer == question.answer:
+            score += 1
+        print(f"User answer {user_answer}")
+        print(f"{index+1}")
+        print(f"Correct answer {question.answer}")
+    template = loader.get_template('test_finished.html')
+    context = {
+            'final_score' : score, 
+            }
+    return HttpResponse(template.render(context, request))
+def add_test(request):
+    if request.method == 'POST':
+        form = TestForm(request.POST)
+        if form.is_valid():
+            test = form.save()
+            return redirect('details', test.id)
+    else:
+        form = TestForm()
+
+    return render(request, 'add_test.html', {'form':form})
+def add_questions(request, id):
+    test = Test.objects.get(id=id)
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.test = test
+            question.save()
+            return redirect('add_questions', id=test.id)
+    else:
+        form = QuestionForm()
+    return render(request, 'add_questions.html', {'form':form, 'test':test})

@@ -1,0 +1,50 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block title %}
+	Flashcard
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'flashcards.css' %}">
+<script>
+	let currentIndex = 0;
+	const setId = {{ flashcardSet.id|safe }};
+	async function loadCard(cardId){
+		const res = await fetch(`/flashcards/${setId}/card/${cardId}/`);
+		if(res.ok){
+			const data = await res.json();
+			document.querySelector('#front').innerText = data.front;
+			document.querySelector('#back').innerText = data.back;
+			currentIndex = data.index;
+			document.querySelector('#count').innerText = `Card ${data.cardId + 1} of ${data.total}`;
+
+		}
+		else{
+			alert('No more cards!');
+		}
+	}
+	document.addEventListener('DOMContentLoaded', () => {
+		loadCard(0);
+		document.querySelector('#next').onclick = () => loadCard(currentIndex + 1);
+		document.querySelector('#prev').onclick = () => loadCard(currentIndex - 1);
+	});
+</script>
+<h1>Flashcard set: {{flashcardSet.title}}</h1>
+<div>
+	<div class="flashcard-container">
+		<div class="flashcard">
+		<div class="front" id="front">
+		</div>
+		<div class="back" id="back">
+		</div>
+		</div>
+	</div>
+	<div class="flashcard-nav">
+		<button id="prev">Previous</button>
+		<button id="next">Next</button>
+	</div>
+</div>
+	
+
+{% endblock %}
+

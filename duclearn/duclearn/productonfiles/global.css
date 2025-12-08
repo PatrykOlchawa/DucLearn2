@@ -1,0 +1,23 @@
+:root{
+	--gold: #CCAE37;
+	--dark: #333333;
+	--light: #C4C4C4;
+}
+body{
+	margin:0px;
+	font-size:23px;
+	color:var(--dark);
+	background-color:var(--light);
+}
+.topnav{
+	background-color:var(--gold);
+	color:var(--dark);
+	padding:10px;
+	margin:0px;
+}
+.topnav a{
+	text-decoration:none;	
+}
+.topnav a:hover, .topnav a:active{
+	text-decoration:underline;
+}

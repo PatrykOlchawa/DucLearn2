@@ -1,0 +1,10 @@
+{% extends "test_details.html" %}
+
+{% block title %}
+Solve Test
+{% endblock %}
+
+{% block content %}
+<h1>Test {{mytest.title}}
+		<a href="{% url 'solve_test' mytest.id firstId %}"<button>START</button></a>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "master.html" %}
+
+{% block title %}
+Your tests
+{% endblock %}
+{% block content %}
+	<h1>Your tests</h1>
+	<ul>
+		{% for x in alltests %}
+		<li>
+			<a href="test_details/{{x.id}}">{{x.title}} - {{x.description}}</a>
+		
+		</li>
+		{% endfor %}
+	</ul>
+	<a href="{% url 'add' %}"><button>ADD TEST</button></a>
+{% endblock %}

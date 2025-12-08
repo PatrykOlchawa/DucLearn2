@@ -1,0 +1,16 @@
+{% extends "master.html" %}
+
+{% block title %}
+Details about {{test.title}}
+{% endblock %}
+
+{% block content %}
+	<h1>Test {{test.title}}</h1>
+	<form method="POST">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit">SAVE</button>
+	</form>
+	
+{% endblock %}
+

@@ -1,0 +1,15 @@
+{% extends "test_details.html" %}
+
+{% block title %}
+Solve Test
+{% endblock %}
+
+{% block content %}
+<script>
+  const userAnswers = {{ all_answers|safe }};
+  console.log("User's submitted answers:", userAnswers);
+</script>
+<h1>Test finished your score is: {{final_score}}</h1>
+<h3>Back to <a href="/tests">tests</a></h3>
+{% endblock %}
+

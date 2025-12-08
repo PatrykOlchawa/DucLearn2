@@ -1,0 +1,36 @@
+{% extends "master.html" %}
+
+{% block title %}
+Waiting room
+{% endblock %}
+{% block content %}
+	<h2>Game Code: {{ game.code }}</h2>
+	<p>Player 1: {{ game.creator }}</p>
+	<p>Player 2: {{ game.opponent|default:"Waiting for second player..."}}</p>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const code = "{{ game_code }}";
+
+    const socket = new WebSocket(
+        (window.location.protocol === "https:" ? "wss://" : "ws://")
+        + window.location.host
+        + `/ws/guesswho/${code}/`
+    );
+
+    socket.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+
+        if (data.type === "player_joined") {
+            document.getElementById("p2").innerText = "Player 2: " + data.username;
+        }
+
+        if (data.type === "start_game") {
+            window.location.href = `/guess_who/${code}/play/`;
+        }
+    };
+});
+</script>
+
+{% endblock %}
+

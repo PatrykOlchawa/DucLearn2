@@ -1,0 +1,20 @@
+{% extends "master.html" %}
+
+{% block title %}
+Guess Who Game
+{% endblock %}
+{% block content %}
+	{% if request.user == game.creator %}
+	<p>You picked <strong>{{ game.chosen_character }} </strong></p>
+	<p>Wait for questions...</p>
+	{% else %}
+	<p>Ask a question:</p>
+	<form id="ask-form">
+		<input type="text" id="question" placeholder="Your question">
+		<button>Ask</button>
+	</form>
+
+	<div id="answers"></div>
+	{% endif %}
+{% endblock %}
+

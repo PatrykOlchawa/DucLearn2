@@ -1,0 +1,25 @@
+{% extends "master.html" %}
+
+{% block title %}
+Details about {{mytest.title}}
+{% endblock %}
+
+{% block content %}
+	<h1>Details of test {{mytest.title}}</h1>
+	<h3>Description {{mytest.description}}</h3>
+	<p>Questions:</p>
+	{% for x in questions %}	
+	<p>{{forloop.counter}}. {{x.text}}</p>
+	{% endfor %}
+	<a href="{% url 'start_test' mytest.id %}">
+		<button>SOLVE</button>
+	</a>
+	<a href="{% url 'add_questions' mytest.id %}">
+		<button>ADD QUESTIONS</button>
+	</a>
+	<a href="{% url 'delete' mytest.id %}">
+		<button>DELETE</button>
+	</a>
+	<p>Back to <a href="/tests">All tests</a></p>
+	
+{% endblock %}

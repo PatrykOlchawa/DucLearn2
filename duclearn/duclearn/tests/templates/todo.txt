@@ -1,0 +1,2 @@
+1) fix text english 0 score
+2) fix indices of questions during test

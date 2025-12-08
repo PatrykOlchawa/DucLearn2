@@ -1,0 +1,30 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block title %}
+Your flashcards
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'flashcards.css' %}">
+	<h1>Your flashcards</h1>
+	<div class="flashcard-container">
+		<div class="flashcard">
+		<div class="front">
+			Apple
+		</div>
+		<div class="back">
+			Jablko
+		</div>
+		</div>
+	</div>
+	<div>
+		<ul>
+		{% for x in flashcards %}
+		<li>
+			<a>{{x.title}} - {{x.description}}</a>
+		</li>
+		{% endfor %}
+		</ul>
+	</div>
+{% endblock %}
+

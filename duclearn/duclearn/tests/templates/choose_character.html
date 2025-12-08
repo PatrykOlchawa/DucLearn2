@@ -1,0 +1,14 @@
+{% extends "master.html" %}
+
+{% block title %}
+Choose character
+{% endblock %}
+{% block content %}
+	<h1>Choose Character!</h1>
+	<form method="POST">
+		{% csrf_token %}
+		<input type="text" name="character" placeholder="Pick character">
+		<button type="submit">Start Game</button>
+	</form>
+{% endblock %}
+
