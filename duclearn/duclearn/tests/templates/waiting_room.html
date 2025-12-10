@@ -9,25 +9,37 @@ Waiting room
 	<p>Player 2: {{ game.opponent|default:"Waiting for second player..."}}</p>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+    const code = "{{ game.code }}";
+    const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const url = `${ws_scheme}://${window.location.host}/ws/guess_who/${code}/`;
+    console.log("WS connecting to:", url);
 
-    const code = "{{ game_code }}";
+    const socket = new WebSocket(url);
 
-    const socket = new WebSocket(
-        (window.location.protocol === "https:" ? "wss://" : "ws://")
-        + window.location.host
-        + `/ws/guesswho/${code}/`
-    );
+    socket.onopen = () => {
+        console.log("WS connected → sending ready");
+        socket.send(JSON.stringify({type: "ready"}));
+    };
 
     socket.onmessage = (e) => {
+        console.log("WS message:", e.data);
         const data = JSON.parse(e.data);
-
         if (data.type === "player_joined") {
-            document.getElementById("p2").innerText = "Player 2: " + data.username;
+            const p2 = document.getElementById("player2");
+            if (p2) p2.innerText = "Player 2: " + data.username;
         }
-
         if (data.type === "start_game") {
+            console.log("Start game received → redirecting");
             window.location.href = `/guess_who/${code}/play/`;
         }
+    };
+
+    socket.onerror = (err) => {
+        console.error("WS error:", err);
+    };
+
+    socket.onclose = (ev) => {
+        console.log("WebSocket closed", ev);
     };
 });
 </script>

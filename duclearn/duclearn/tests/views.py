@@ -168,21 +168,13 @@ def join_game(request):
         async_to_sync(layer.group_send)(
             f"guesswho_{code}",
             {
-                "type": "game_message",
+                "type": "game_event",
                 "data": {
                     "type": "player_joined",
                     "username": request.user.username
                 }
             }
         )
-        if game.is_full():
-            async_to_sync(layer.group_send)(
-                f"guesswho_{code}",
-                {
-                    "type": "game_message",
-                    "data": { "type": "start_game" }
-                }
-            )
 
         return redirect("waiting_room", game_code=code)
         

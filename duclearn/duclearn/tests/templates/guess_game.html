@@ -4,17 +4,109 @@
 Guess Who Game
 {% endblock %}
 {% block content %}
-	{% if request.user == game.creator %}
-	<p>You picked <strong>{{ game.chosen_character }} </strong></p>
-	<p>Wait for questions...</p>
-	{% else %}
-	<p>Ask a question:</p>
-	<form id="ask-form">
-		<input type="text" id="question" placeholder="Your question">
-		<button>Ask</button>
-	</form>
+<script>
+    const gameCode = "{{ game.code }}";
+    const character = "{{ game.chosen_character }}";
+    const currentUser = "{{ request.user.username }}";
+    const player1 = "{{ game.creator.username }}";   // answerer
+    const player2 = "{{ game.opponent.username }}";  // asker
+</script>
+<h2>Guess Who — Game Code {{ game.code }}</h2>
 
-	<div id="answers"></div>
-	{% endif %}
+
+{% if request.user == game.opponent %}
+<!-- Alice (question asker) -->
+<input id="questionInput" type="text" placeholder="Ask a question...">
+<button id="questionSend" onclick="sendQuestion()">Send</button>
+{% endif %}
+
+{% if request.user == game.creator %}
+<!-- Bob (answerer) -->
+<h2>Your character is: {{ game.character }} </h2>
+<div id="answerControls" style="display:none;">
+    <button onclick="sendAnswer('YES')">YES</button>
+    <button onclick="sendAnswer('NO')">NO</button>
+</div>
+{% endif %}
+
+<div id="log" style="border:1px solid #333; padding:10px; height:200px; overflow-y:auto;"></div>
+<script>
+const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+const socket = new WebSocket(
+    `${wsScheme}://${window.location.host}/ws/guess_who/{{ game.code }}/`
+);
+
+socket.onopen = () => console.log("PLAY WS connected");
+
+socket.onmessage = (e) => {
+    console.log("PLAY WS message:", e.data);
+    const data = JSON.parse(e.data);
+
+    if (data.type === "new_question") {
+        addToLog("❓ " + data.user + ": " + data.question);
+        if ("{{ request.user.username }}" === "{{ game.creator.username }}") {
+            document.getElementById("answerControls").style.display = "block";
+        }
+	else{
+	    console.log(data.user + " {{ game.chosen_character }}");
+	    if(data.question === "{{ game.chosen_character }}"){
+		socket.send(JSON.stringify({
+        	type: "game_over",
+        	winner: "{{ request.user.username }}",
+        	character: "{{ game.chosen_character }}"
+    		}));	
+	    }
+	}
+    }
+    else if (data.type === "new_answer") {
+        addToLog("💬 " + data.user + ": " + data.answer);
+        document.getElementById("answerControls").style.display = "none";
+    }
+    else if (data.type === "game_over") {
+    addToLog(`🏆 ${data.winner} wins! The character was: ${data.character}`);
+
+    // Disable question input for Alice
+    const input = document.getElementById("questionInput");
+    if (input) input.disabled = true;
+
+    // Hide Bob's answer buttons
+    const ac = document.getElementById("answerControls");
+    if (ac) ac.style.display = "none";
+   
+	    const button = document.getElementById("questionSend");
+	    if (button) button.disabled = true;
+    // Optional redirect to summary page
+    // setTimeout(() => {
+    //     window.location.href = `/guess_who/${gameCode}/results/`;
+    // }, 3000);
+}
+};
+
+function sendQuestion() {
+    const q = document.getElementById("questionInput").value;
+    socket.send(JSON.stringify({
+        type: "new_question",
+        question: q,
+        user: "{{ request.user.username }}"
+    }));
+    document.getElementById("questionInput").value = "";
+}
+
+function sendAnswer(ans) {
+    socket.send(JSON.stringify({
+        type: "new_answer",
+        answer: ans,
+        user: "{{ request.user.username }}"
+    }));
+}
+
+function addToLog(msg) {
+    const log = document.getElementById("log");
+    const div = document.createElement("div");
+    div.textContent = msg;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+}
+</script>
 {% endblock %}
 
