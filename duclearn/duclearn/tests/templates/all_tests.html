@@ -3,15 +3,24 @@
 {% block title %}
 Your tests
 {% endblock %}
+
 {% block content %}
-	<h1>Your tests</h1>
-	<ul>
-		{% for x in alltests %}
-		<li>
-			<a href="test_details/{{x.id}}">{{x.title}} - {{x.description}}</a>
-		
-		</li>
-		{% endfor %}
-	</ul>
-	<a href="{% url 'add' %}"><button>ADD TEST</button></a>
+<h1 class="dashboard-title">Your Tests</h1>
+
+<div style="text-align: center; margin-bottom: 30px;">
+    <a href="{% url 'add' %}" class="btn-primary">➕ Create New Test</a>
+</div>
+
+<div class="dashboard-grid">
+    {% for x in alltests %}
+    <a href="test_details/{{x.id}}" class="dashboard-card">
+        <h2>{{ x.title }}</h2>
+        <p>{{ x.description }}</p>
+    </a>
+    {% empty %}
+    <div style="text-align:center; grid-column: 1 / -1; color: #555;">
+        <p>No tests available. Create your first one above!</p>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

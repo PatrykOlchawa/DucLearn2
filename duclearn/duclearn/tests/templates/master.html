@@ -1,14 +1,46 @@
 {% load static %}
 <!DOCTYPE html>
+<html lang="en">
 
-<html>
-	<head>
-		<title>{% block title %} {% endblock %}</title>
-	</head>
-	<body>
-		<link rel="stylesheet" href="{% static 'global.css' %}">
-		{% include "topnav.html" %}
-		{% block content %}
-		{% endblock %}
-	</body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DucLearn{% endblock %}</title>
+
+    <!-- Global Styles -->
+</head>
+
+<body>
+
+    <link rel="stylesheet" href="{% static 'global.css' %}">
+    <!-- NAVIGATION BAR -->
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+
+            {% if user.is_authenticated %}
+                <li><a href="/tests/">Tests</a></li>
+                <li><a href="/flashcards/">Flashcards</a></li>
+                <li><a href="/guess_who/">Guess Who</a></li>
+                <li><a href="/logout/">Logout ({{ user.username }})</a></li>
+            {% else %}
+                <li><a href="/login/">Login</a></li>
+                <li><a href="/register/">Register</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Global JS (optional animations) -->
+    <script src="{% static 'js/ui.js' %}"></script>
+
+    {% block scripts %}
+    {% endblock %}
+
+</body>
 </html>

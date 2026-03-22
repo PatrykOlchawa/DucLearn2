@@ -1,23 +1,494 @@
-:root{
-	--gold: #CCAE37;
-	--dark: #333333;
-	--light: #C4C4C4;
+/* ---------- GENERAL ---------- */
+
+@keyframes fadeInPage {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
-body{
-	margin:0px;
-	font-size:23px;
-	color:var(--dark);
-	background-color:var(--light);
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #F1F1F1;
+    margin: 0;
+    padding: 0;
+    color: #333333;
+    animation: fadeInPage 0.8s ease-out;
 }
-.topnav{
-	background-color:var(--gold);
-	color:var(--dark);
-	padding:10px;
-	margin:0px;
+
+.container {
+    width: 90%;
+    margin: auto;
 }
-.topnav a{
-	text-decoration:none;	
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
 }
-.topnav a:hover, .topnav a:active{
-	text-decoration:underline;
+::-webkit-scrollbar-track {
+    background: #F1F1F1;
 }
+::-webkit-scrollbar-thumb {
+    background: #CCAE37;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #b4962f;
+}
+
+/* ---------- TOP NAVIGATION ---------- */
+
+nav {
+    background-color: #CCAE37;
+    padding: 15px 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333333;
+    font-weight: bold;
+    font-size: 20px;
+    position: relative;
+    padding-bottom: 5px;
+    transition: color 0.3s ease;
+}
+
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 3px;
+    bottom: 0;
+    left: 50%;
+    background-color: white;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+nav ul li a:hover {
+    color: white;
+    text-shadow: 0 0 8px rgba(255,255,255,0.4);
+}
+
+nav ul li a:hover::after {
+    width: 100%;
+}
+
+/* ---------- GUESS WHO LAYOUT ---------- */
+
+.game-wrapper {
+    display: flex;
+    margin-top: 40px;
+    gap: 25px;
+}
+
+/* Left side — controls */
+.left-panel {
+    flex: 2;
+    background: #FFFFFF;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.left-panel:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+/* Right side — Q/A log */
+.right-panel {
+    flex: 1;
+    max-height: 600px;
+    overflow-y: auto;
+    border-left: 4px solid #CCAE37;
+    padding-left: 20px;
+    padding-right: 10px;
+}
+
+.log-entry {
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    background: #E8E8E8;
+    border-radius: 8px;
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+    animation: slideInRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.log-entry:hover {
+    background: #DFDFDF;
+    border-left-color: #CCAE37;
+    transform: translateX(5px);
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ---------- YES / NO BUTTONS ---------- */
+
+#answerControls {
+    margin-top: 25px;
+    display: flex;
+    gap: 20px;
+}
+
+.answer-btn {
+    flex: 1;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 22px;
+    color: white;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.answer-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+.answer-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.answer-btn:active {
+    transform: scale(0.95);
+}
+
+/* YES button */
+.yes-btn {
+    background-color: #3ca63c;
+    box-shadow: 0 6px 0 #2d7a2d, 0 8px 15px rgba(60, 166, 60, 0.3);
+}
+
+.yes-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 0 #2d7a2d, 0 12px 20px rgba(60, 166, 60, 0.4);
+}
+
+.yes-btn:active {
+    box-shadow: 0 2px 0 #2d7a2d, 0 4px 6px rgba(60, 166, 60, 0.3);
+    transform: translateY(4px) scale(0.95);
+}
+
+/* NO button */
+.no-btn {
+    background-color: #c23333;
+    box-shadow: 0 6px 0 #7a2121, 0 8px 15px rgba(194, 51, 51, 0.3);
+}
+
+.no-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 0 #7a2121, 0 12px 20px rgba(194, 51, 51, 0.4);
+}
+
+.no-btn:active {
+    box-shadow: 0 2px 0 #7a2121, 0 4px 6px rgba(194, 51, 51, 0.3);
+    transform: translateY(4px) scale(0.95);
+}
+
+/* ---------- INPUT FOR QUESTIONS ---------- */
+
+.question-box {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.question-box input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 2px solid #C4C4C4;
+    font-size: 18px;
+    background: #FAFAFA;
+    transition: all 0.3s ease;
+}
+
+.question-box input:focus {
+    outline: none;
+    border-color: #CCAE37;
+    background: #FFFFFF;
+    box-shadow: 0 0 10px rgba(204, 174, 55, 0.2);
+}
+
+.question-box button {
+    padding: 14px 25px;
+    border: none;
+    background-color: #CCAE37;
+    color: #333333;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(204, 174, 55, 0.2);
+    transition: all 0.2s ease;
+}
+
+.question-box button:hover {
+    background-color: #e0c242;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(204, 174, 55, 0.3);
+}
+
+.question-box button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(204, 174, 55, 0.2);
+}
+
+/* ---------- FORMS (LOGIN / REGISTER / CREATE GAME) ---------- */
+
+.form-card {
+    max-width: 420px;
+    margin: 50px auto;
+    background: white;
+    padding: 35px 30px;
+    border-radius: 12px;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.1);
+}
+
+.form-card input,
+.form-card select {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 2px solid #E0E0E0;
+    background: #FAFAFA;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.form-card input:focus,
+.form-card select:focus {
+    outline: none;
+    border-color: #CCAE37;
+    background: #FFFFFF;
+    box-shadow: 0 0 8px rgba(204, 174, 55, 0.2);
+}
+
+.form-card button {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    background: #CCAE37;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #333333;
+    box-shadow: 0 4px 10px rgba(204, 174, 55, 0.2);
+    transition: all 0.3s ease;
+}
+
+.form-card button:hover {
+    background: #e0c242;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(204, 174, 55, 0.3);
+}
+
+.form-card button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(204, 174, 55, 0.2);
+}
+
+/* ---------- DASHBOARD & CARDS ---------- */
+
+.dashboard-title {
+    text-align: center;
+    margin: 40px 0 20px;
+    font-size: 36px;
+    color: #333333;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+    padding: 10px;
+}
+
+.dashboard-card {
+    background-color: #F1F1F1; /* User requested #F1F1F1 */
+    padding: 25px 20px;
+    border-radius: 12px;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* distinct shadow against #F1F1F1 background */
+    text-align: center;
+    text-decoration: none;
+    color: #333333;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    /* slight tint change so it stands out more on hover */
+    background-color: #FFFFFF;
+    border-color: #CCAE37;
+}
+
+.dashboard-card h2, .dashboard-card h3 {
+    margin: 10px 0;
+    color: #CCAE37;
+    font-size: 24px;
+}
+
+.dashboard-card p {
+    color: #555555;
+    margin: 0;
+}
+
+.dashboard-action {
+    background-color: #CCAE37;
+    color: #333333 !important;
+    font-weight: bold;
+}
+.dashboard-action:hover {
+    background-color: #e0c242;
+    color: white !important;
+}
+
+/* ---------- BUTTONS ---------- */
+.btn-primary {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #CCAE37;
+    color: #333333;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(204, 174, 55, 0.2);
+    transition: all 0.2s ease;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-primary:hover {
+    background-color: #e0c242;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(204, 174, 55, 0.3);
+}
+
+.btn-secondary {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #C4C4C4;
+    color: #333333;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-secondary:hover {
+    background-color: #A0A0A0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* ---------- HERO ---------- */
+.hero {
+    text-align: center;
+    margin: 60px auto;
+    max-width: 800px;
+    animation: fadeInPage 0.8s ease-out;
+}
+
+.hero h1 {
+    font-size: 48px;
+    color: #CCAE37;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.hero p {
+    font-size: 20px;
+    color: #555555;
+    margin-bottom: 40px;
+}
+
+.home-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.home-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    color: #333333;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 15px 30px;
+    border-radius: 30px;
+    border: 2px solid #E0E0E0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.home-btn:hover {
+    transform: translateY(-4px);
+    border-color: #CCAE37;
+    box-shadow: 0 8px 20px rgba(204, 174, 55, 0.2);
+    background: #FAFAFA;
+}
+

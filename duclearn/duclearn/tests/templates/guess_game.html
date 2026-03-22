@@ -11,25 +11,38 @@ Guess Who Game
     const player1 = "{{ game.creator.username }}";   // answerer
     const player2 = "{{ game.opponent.username }}";  // asker
 </script>
-<h2>Guess Who — Game Code {{ game.code }}</h2>
+<div class="container">
+    <h1>Guess Who — Game Code {{ game.code }}</h1>
 
+    <div class="game-wrapper">
 
-{% if request.user == game.opponent %}
-<!-- Alice (question asker) -->
-<input id="questionInput" type="text" placeholder="Ask a question...">
-<button id="questionSend" onclick="sendQuestion()">Send</button>
-{% endif %}
+        <!-- LEFT SIDE (Controls) -->
+        <div class="left-panel">
 
-{% if request.user == game.creator %}
-<!-- Bob (answerer) -->
-<h2>Your character is: {{ game.character }} </h2>
-<div id="answerControls" style="display:none;">
-    <button onclick="sendAnswer('YES')">YES</button>
-    <button onclick="sendAnswer('NO')">NO</button>
+            {% if request.user.username == game.opponent.username %}
+            <div class="question-box">
+                <input id="questionInput" type="text" placeholder="Ask a question...">
+                <button onclick="sendQuestion()">Send</button>
+            </div>
+            {% endif %}
+
+            {% if request.user.username == game.creator.username %}
+            <div id="answerControls" style="display:none;">
+                <button onclick="sendAnswer('YES')" class="answer-btn yes-btn">YES</button>
+                <button onclick="sendAnswer('NO')" class="answer-btn no-btn">NO</button>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <!-- RIGHT SIDE (Log) -->
+        <div class="right-panel">
+            <h3>Questions & Answers</h3>
+            <div id="log"></div>
+        </div>
+
+    </div>
 </div>
-{% endif %}
-
-<div id="log" style="border:1px solid #333; padding:10px; height:200px; overflow-y:auto;"></div>
 <script>
 const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
 const socket = new WebSocket(

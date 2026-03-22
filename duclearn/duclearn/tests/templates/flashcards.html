@@ -4,27 +4,22 @@
 {% block title %}
 Your flashcards
 {% endblock %}
+
 {% block content %}
 <link rel="stylesheet" href="{% static 'flashcards.css' %}">
-	<h1>Your flashcards</h1>
-	<div class="flashcard-container">
-		<div class="flashcard">
-		<div class="front">
-			Apple
-		</div>
-		<div class="back">
-			Jablko
-		</div>
-		</div>
-	</div>
-	<div>
-		<ul>
-		{% for x in flashcards %}
-		<li>
-			<a>{{x.title}} - {{x.description}}</a>
-		</li>
-		{% endfor %}
-		</ul>
-	</div>
-{% endblock %}
 
+<h1 class="dashboard-title">Your Flashcards</h1>
+
+<div class="dashboard-grid">
+    {% for x in flashcards %}
+    <a href="#" class="dashboard-card">
+        <h2>{{ x.title }}</h2>
+        <p>{{ x.description }}</p>
+    </a>
+    {% empty %}
+    <div style="text-align:center; grid-column: 1 / -1; color: #555;">
+        <p>You haven't added any flashcards yet.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

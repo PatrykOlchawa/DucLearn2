@@ -3,9 +3,18 @@
 {% block title %}
 Guess Who
 {% endblock %}
-{% block content %}
-	<h1>Guess Who</h2>
-	<a href="{% url 'create_guesswho' %}">Create Game</a><br>
-	<a href="{% url 'join_guesswho'%}">Join Game</a<
-{% endblock %}
 
+{% block content %}
+<h1 class="dashboard-title">Guess Who</h1>
+
+<div class="dashboard-grid">
+    <a href="{% url 'create_guesswho' %}" class="dashboard-card">
+        <h2>Create Game</h2>
+        <p>Start a new game as the host</p>
+    </a>
+    <a href="{% url 'join_guesswho' %}" class="dashboard-card">
+        <h2>Join Game</h2>
+        <p>Enter an existing game code</p>
+    </a>
+</div>
+{% endblock %}

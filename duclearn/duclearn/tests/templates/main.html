@@ -1,11 +1,21 @@
- {% extends "master.html" %}
-
-{% block title %}
-	DucLearn
-{% endblock title %}
+{% extends "master.html" %}
+{% load static %}
+{% block title %}Welcome to DucLearn{% endblock %}
 
 {% block content %}
-	<h1>Hi {{username}}, Welcome to DucLearn!</h1>
-	<h3>Members</h3>
-	<p>Check out all our <a href="members">members</a></p>
+<div class="hero">
+    <h1>Welcome to DucLearn</h1>
+    <p>The place where learning becomes simple, fun and interactive.</p>
+
+    <div class="home-buttons">
+        <a class="home-btn" href="/tests/">Tests</a>
+        <a class="home-btn" href="/flashcards/">Flashcards</a>
+        <a class="home-btn" href="/guess_who/">Guess Who Game</a>
+
+        {% if not user.is_authenticated %}
+        <a class="home-btn" href="/login/">Login</a>
+        <a class="home-btn" href="/register/">Register</a>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

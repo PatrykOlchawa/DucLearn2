@@ -38,3 +38,7 @@
   background-color: #333333;
   transform: rotateY(180deg);
 }
+.flashcard-nav {
+  position:relative;
+  align-items: center;
+}
